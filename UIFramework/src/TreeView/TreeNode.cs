@@ -134,6 +134,9 @@ namespace UIFramework
 
         private bool _isChecked = true;
 
+        /// <summary>
+        /// Represents an icon drawn next to the tree node header.
+        /// </summary>
         public virtual string Icon { get; set; } = IconManager.FOLDER_ICON.ToString();
 
         /// <summary>
