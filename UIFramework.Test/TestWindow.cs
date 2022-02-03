@@ -46,7 +46,7 @@ namespace UIFramework
 
         public class FileNode : TreeNode
         {
-            public override string Icon => IconManager.FILE_ICON.ToString();
+          //  public override string Icon => IconManager.FILE_ICON.ToString();
 
             public FileNode(string name) : base(name)
             {

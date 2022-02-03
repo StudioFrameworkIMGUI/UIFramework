@@ -9,19 +9,38 @@ namespace UIFramework
 {
     public static class ImGuiHelper
     {
+        /// <summary>
+        /// Makes any font used UI element as bold.
+        /// </summary>
         public static void BeginBoldText() {
             ImGui.PushFont(ImGuiController.DefaultFontBold);
         }
 
+        /// <summary>
+        /// Closes the BeginBoldText()
+        /// </summary>
         public static void EndBoldText() {
             ImGui.PopFont();
         }
 
+        /// <summary>
+        /// Increases the cursor position on the X direction.
+        /// </summary>
         public static void IncrementCursorPosX(float amount) {
             ImGui.SetCursorPosX(ImGui.GetCursorPosX() + amount);
         }
 
-        public static void LoadMenuItem(MenuItem item, bool alignFramePadding = true)
+        /// <summary>
+        /// Increases the cursor position on the Y direction.
+        /// </summary>
+        public static void IncrementCursorPosY(float amount) {
+            ImGui.SetCursorPosX(ImGui.GetCursorPosY() + amount);
+        }
+
+        /// <summary>
+        /// Draws a menu item. Must be inside a current popup or menubar.
+        /// </summary>
+        public static void DrawMenuItem(MenuItem item, bool alignFramePadding = true)
         {
             string header = item.Header;
 
@@ -59,7 +78,7 @@ namespace UIFramework
             if (opened)
             {
                 foreach (var child in item.MenuItems)
-                    LoadMenuItem(child);
+                    DrawMenuItem(child);
 
                 ImGui.EndMenu();
             }

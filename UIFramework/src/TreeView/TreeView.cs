@@ -463,7 +463,7 @@ namespace UIFramework
         private void DrawRightClickMenu(TreeNode node)
         {
             foreach (var item in node.ContextMenus)
-                ImGuiHelper.LoadMenuItem(item);
+                ImGuiHelper.DrawMenuItem(item);
         }
 
         private bool GetNodePosition(TreeNode target, TreeNode parent, ref float pos, float itemHeight)

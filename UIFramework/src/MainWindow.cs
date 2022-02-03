@@ -16,8 +16,14 @@ namespace UIFramework
     {
         protected ImGuiController _controller;
 
+        /// <summary>
+        /// Windows attached to the main window.
+        /// </summary>
         public List<Window> Windows = new List<Window>();
 
+        /// <summary>
+        /// The menu items on the top of the main window.
+        /// </summary>
         public List<MenuItem> MenuItems = new List<MenuItem>();
 
         private bool ForceFocus = false;
@@ -142,7 +148,7 @@ namespace UIFramework
             if (ImGui.BeginMainMenuBar())
             {
                 foreach (var item in MenuItems)
-                    ImGuiHelper.LoadMenuItem(item);
+                    ImGuiHelper.DrawMenuItem(item);
                 ImGui.EndMenuBar();
             }
 
