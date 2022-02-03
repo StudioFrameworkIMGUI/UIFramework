@@ -70,7 +70,6 @@ namespace UIFramework
             if (renderingFrame) return;
 
             //Only allow updating the frame once if the frame requires updating in a seperate part of the code
-            renderingFrame = true;
 
             base.OnRenderFrame(e);
 
@@ -80,6 +79,8 @@ namespace UIFramework
                 System.Threading.Thread.Sleep(1);
                 return;
             }
+
+            renderingFrame = true;
 
             //Only force the focus once to update the rendered frame
             if (ForceFocus)
