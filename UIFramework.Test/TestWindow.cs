@@ -22,15 +22,9 @@ namespace UIFramework
             TreeNode root = new TreeNode("Root");
             TreeView.Nodes.Add(root);
 
-            TreeNode node1 = new FileNode("RenamableNode") { CanRename = true };
-            root.AddChild(node1);
-
-            TreeNode node2 = new FileNode("DragDropNode") { CanDragDrop = true };
-            root.AddChild(node2);
-
-            TreeNode node3 = new FileNode("CheckableNode") { HasCheckBox = true };
-            root.AddChild(node3);
-
+            root.AddChild(new FileNode("RenamableNode") { CanRename = true });
+            root.AddChild(new FileNode("DragDropNode") { CanDragDrop = true });
+            root.AddChild(new FileNode("CheckableNode") { HasCheckBox = true });
             TreeNode node4 = new FileNode("Render Override");
             root.AddChild(node4);
 
