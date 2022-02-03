@@ -88,14 +88,14 @@ namespace UIFramework
             }
 
             ScrollY = pos;
-            UpdateFlags |= UPDATE_FLAGS.SCOLL;
+            UpdateFlags |= UPDATE_FLAGS.SCROLL;
         }
 
         public void UpdateScroll(float scrollX, float scrollY)
         {
             ScrollX = scrollX;
             ScrollY = scrollY;
-            UpdateFlags |= UPDATE_FLAGS.SCOLL;
+            UpdateFlags |= UPDATE_FLAGS.SCROLL;
         }
 
         public void Render()
@@ -116,7 +116,7 @@ namespace UIFramework
                 IsFocused = ImGui.IsWindowFocused();
 
                 //Scroll to specified position
-                if (UpdateFlags.HasFlag(UPDATE_FLAGS.SCOLL)) {
+                if (UpdateFlags.HasFlag(UPDATE_FLAGS.SCROLL)) {
                     ImGui.SetScrollX(ScrollX);
                     ImGui.SetScrollY(ScrollY);
                 }
@@ -494,7 +494,7 @@ namespace UIFramework
         enum UPDATE_FLAGS
         {
             NONE,
-            SCOLL,
+            SCROLL,
         }
     }
 }
