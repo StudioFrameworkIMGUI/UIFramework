@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "IaMAOEAnE1+ShP25G7R+ftfrYRZxADfOT05Hg1YVjibcrlSRFc7PvDZtkmS21PC+6Gi/GhmZZ0WIFkYaBS+EpQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Nathan\\Documents\\GitHub\\GLEngine\\UIFramework\\UIFramework\\UIFramework.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Nathan\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.2-mauipre.1.22054.8\\microsoft.win32.systemevents.6.0.2-mauipre.1.22054.8.nupkg.sha512",
+    "C:\\Users\\Nathan\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\Nathan\\.nuget\\packages\\system.drawing.common\\6.0.2-mauipre.1.22054.8\\system.drawing.common.6.0.2-mauipre.1.22054.8.nupkg.sha512"
+  ],
+  "logs": []
+}
