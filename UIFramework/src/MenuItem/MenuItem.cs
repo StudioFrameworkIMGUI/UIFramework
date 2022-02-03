@@ -53,6 +53,10 @@ namespace UIFramework
         //Command to execute during a click operation
         private Action _command;
 
+        public MenuItem(string name) {
+            _header = name;
+        }
+
         public MenuItem(string name, EventHandler clicked)
         {
             _header = name;
@@ -66,7 +70,7 @@ namespace UIFramework
         }
 
         public void Execute() {
-            _command.Invoke();
+            _command?.Invoke();
         }
 
         protected void RaisePropertyChanged(string memberName = "")

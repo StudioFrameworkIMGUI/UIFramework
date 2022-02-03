@@ -27,6 +27,9 @@ namespace UIFramework
             root.AddChild(new FileNode("CheckableNode") { HasCheckBox = true });
             TreeNode node4 = new FileNode("Render Override");
             root.AddChild(node4);
+            TreeNode node5 = new FileNode("ContextItems");
+            node5.ContextMenus.Add(new MenuItem("Test1"));
+            root.AddChild(node5);
 
             node4.RenderOverride += delegate
             {
