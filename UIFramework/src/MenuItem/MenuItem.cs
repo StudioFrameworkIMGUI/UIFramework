@@ -10,6 +10,10 @@ namespace UIFramework
     public class MenuItem : INotifyPropertyChanged
     {
         private string _header;
+
+        /// <summary>
+        /// The display name of the menu item.
+        /// </summary>
         public string Header
         {
             get { return _header; }
@@ -57,16 +61,18 @@ namespace UIFramework
             _header = name;
         }
 
-        public MenuItem(string name, EventHandler clicked)
+        public MenuItem(string name, EventHandler clicked, bool isChecked = false)
         {
             _header = name;
             _command = () => { clicked?.Invoke(this, EventArgs.Empty); };
+            IsChecked = isChecked;
         }
 
-        public MenuItem(string name, Action clicked)
+        public MenuItem(string name, Action clicked, bool isChecked = false)
         {
             _header = name;
             _command = clicked;
+            IsChecked = isChecked;
         }
 
         public void Execute() {

@@ -29,11 +29,18 @@ namespace UIFramework
         /// </summary>
         public bool DisplaySearchBox = true;
 
+        /// <summary>
+        /// Determines to use the selection box or not.
+        /// </summary>
+        public bool UseSelectionBox = true;
+
         public EventHandler OnSelectionChanged;
         public EventHandler OnNodeChecked;
         public EventHandler OnNodeLeftClicked;
 
         public TreeNode GetDroppedTreeNode() => dragDroppedNode;
+
+        public int ColumnCount = 1;
 
         //Scroll handling
         protected float ScrollX;
@@ -56,16 +63,50 @@ namespace UIFramework
         //Drag/drop
         private TreeNode dragDroppedNode;
 
+        //Selection tools
+        private TreeNode previousSelectedNode = null;
+
+        private SelectionBox SelectionBox = new SelectionBox();
+        private bool previousFocus = false;
+
+        private TreeNode focusedNode = null;
+
         private UPDATE_FLAGS UpdateFlags;
 
+        public TreeView()
+        {
+            SelectionBox.OnSelectionStart += delegate {
+                if (!ImGui.GetIO().KeyCtrl)
+                    DeselectAll();
+            };
+        }
+
         public void AddSelection(TreeNode node) {
+            if (SelectedNodes.Contains(node))
+                return;
+
+            node.IsSelected = true;
             SelectedNodes.Add(node);
             OnSelectionChanged?.Invoke(node, EventArgs.Empty);
         }
 
         public void RemoveSelection(TreeNode node) {
+            if (!SelectedNodes.Contains(node))
+                return;
+
+            node.IsSelected = false;
             SelectedNodes.Remove(node);
             OnSelectionChanged?.Invoke(node, EventArgs.Empty);
+        }
+
+        public void DeselectAll()
+        {
+            var selected = SelectedNodes.ToList();
+            foreach (var node in selected) {
+                node.IsSelected = false;
+                SelectedNodes.Remove(node);
+            }
+            OnSelectionChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public void ScrollToSelected(TreeNode target)
@@ -105,17 +146,28 @@ namespace UIFramework
             var itemHeight = ImGui.GetTextLineHeightWithSpacing() + 3;
 
             if (DisplaySearchBox)
-            DrawSearchBox();
+                DrawSearchBox();
 
             //Set the same header colors as hovered and active. This makes nav scrolling more seamless looking
             var active = ImGui.GetStyle().Colors[(int)ImGuiCol.Header];
             ImGui.PushStyleColor(ImGuiCol.HeaderHovered, active);
             ImGui.PushStyleColor(ImGuiCol.NavHighlight, new Vector4(0));
 
+            var width = ImGui.GetWindowWidth();
+            var height = ImGui.GetWindowHeight();
+            var posY = ImGui.GetCursorPosY();
+
+            ImGui.BeginChild("##window_space", new Vector2(width, height - posY - 5));
+            bool isWindowFocused = ImGui.IsWindowFocused();
+            bool isWindowHovered = ImGui.IsWindowHovered();
+
             //Put the entire control within a child
-            ImGui.BeginChild("##tree_view1");
+            if (ImGui.BeginChild("##tree_view1", new Vector2(width - 100, height - posY - 5)))
             {
                 IsFocused = ImGui.IsWindowFocused();
+                SelectionBox.Enabled = true;
+                if (ImGui.IsWindowHovered())
+                    isWindowHovered = true;
 
                 //Scroll to specified position
                 if (UpdateFlags.HasFlag(UPDATE_FLAGS.SCROLL)) {
@@ -128,9 +180,31 @@ namespace UIFramework
                     ScrollY = ImGui.GetScrollY();
                 }
 
+                if (ColumnCount > 1)
+                    ImGui.Columns(ColumnCount);
+
                 foreach (var child in Nodes)
                     DrawNode(child, itemHeight);
+
+                if (ColumnCount > 1)
+                    ImGui.Columns(1);
+
+                ImGui.EndChild();
             }
+
+            //Make sure the selection tool must either have the window focused or hovered
+            bool hasSelectionFocus = isWindowFocused || IsFocused || isWindowHovered;
+
+            if (UseSelectionBox)
+            {
+                if (!isNameEditing && hasSelectionFocus)
+                    SelectionBox.Render();
+                else if (SelectionBox.IsActive && !hasSelectionFocus) //disable when window not focused
+                    SelectionBox.Reset();
+            }
+
+            previousFocus = hasSelectionFocus;
+
             ImGui.EndChild();
 
             ImGui.PopStyleColor(2);
@@ -219,9 +293,25 @@ namespace UIFramework
             bool leftDoubleClicked = ImGui.IsItemHovered() && ImGui.IsMouseDoubleClicked(ImGuiMouseButton.Left);
             bool leftClicked = ImGui.IsItemClicked(ImGuiMouseButton.Left);
             bool rightClicked = ImGui.IsItemClicked(ImGuiMouseButton.Right);
-            bool nodeFocused = ImGui.IsItemFocused();
             bool isToggleOpened = ImGui.IsItemToggledOpen();
             bool beginDragDropSource = !isRenaming && node.CanDragDrop && ImGui.BeginDragDropSource();
+
+            //Force left/right click during a context menu popup
+            if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByPopup))
+            {
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                    leftClicked = true;
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Right))
+                    rightClicked = true;
+            }
+
+            bool initiateRename = false;
+
+            //Do not activate selection box during a node hover
+            if (!SelectionBox.IsActive && ImGui.IsItemHovered())
+                SelectionBox.Enabled = false;
+
+            SelectionBox.CheckFrameSelection(node);
 
             if (beginDragDropSource)
                 HandleDragDrop(node);
@@ -237,21 +327,57 @@ namespace UIFramework
             TryDrawNodeIcon(node);
 
             ImGui.AlignTextToFramePadding();
+
+
+            var textSize = ImGui.CalcTextSize(node.Header);
+            var pos = ImGui.GetCursorScreenPos();
+
+            var textRenameMin = new Vector2(pos.X - 5, pos.Y + 2);
+            var textRenameMax = new Vector2(pos.X + textSize.X + 25, pos.Y + textSize.Y + 5);
+
+            if (ImGui.IsMouseHoveringRect(textRenameMin, textRenameMax) && leftClicked)
+                initiateRename = true;
+
+            bool debug = false;
+            if (debug)
+            {
+                ImGui.GetWindowDrawList().AddRect(
+                   textRenameMin, textRenameMax,
+                    ImGui.ColorConvertFloat4ToU32(new Vector4(1)));
+            }
+
+            bool nodeFocused = false;
+            //Only check when the node focus is changed which gets activated during arrow keys
+            //Imgui keeps IsItemFocused() on the node and only removes it during a left click
+            if (ImGui.IsItemFocused() && focusedNode != node)
+            {
+                focusedNode = node;
+                nodeFocused = true;
+            }
+
             if (isRenaming)
                 DrawRenamingNode(node);
             else {
                 if (node.RenderOverride != null)
                     node.RenderOverride.Invoke(this, EventArgs.Empty);
                 else
+                {
                     ImGui.Text(node.Header);
+                    if (ColumnCount > 0) {
+                        //Shift to each column. Requires a render override to make use of columns.
+                        for (int i = 0; i < ColumnCount; i++)
+                            ImGui.NextColumn();
+                    }
+                }
             }
+
             ImGui.PopStyleVar();
 
             if (!isRenaming)
             {
                 //Check for rename selection on selected renamable node
-                if (node.IsSelected && node.CanRename && RENAME_ENABLE)
-                    HandleRenaming(node, leftClicked && !leftDoubleClicked);
+                if (node.IsSelected && node.CanRename && RENAME_ENABLE && !SelectionBox.IsActive)
+                    HandleRenaming(node, initiateRename && !leftDoubleClicked);
 
                 //Deselect node during ctrl held when already selected
                 if (leftClicked && ImGui.GetIO().KeyCtrl && node.IsSelected)
@@ -270,11 +396,17 @@ namespace UIFramework
                         SelectedNodes.Clear();
                     }
 
+                    //Reset all selection unless shift/control held down
+                    if (ImGui.GetIO().KeyShift)
+                        SelectNodeRange(node);
+                    else
+                        previousSelectedNode = node;
+
                     //Add the clicked node to selection.
                     node.IsSelected = true;
                     AddSelection(node);
                 }  //Focused during a scroll using arrow keys
-                else if (nodeFocused && !isToggleOpened && !node.IsSelected)
+                else if (nodeFocused && !isToggleOpened && !flags.HasFlag(ImGuiTreeNodeFlags.Selected))
                 {
                     if (!ImGui.GetIO().KeyCtrl && !ImGui.GetIO().KeyShift)
                     {
@@ -287,6 +419,7 @@ namespace UIFramework
                     AddSelection(node);
                     node.IsSelected = true;
                 }
+
                 if (leftClicked && node.IsSelected)
                     OnNodeLeftClicked?.Invoke(node, EventArgs.Empty);
 
@@ -297,12 +430,62 @@ namespace UIFramework
             }
         }
 
+        private void SelectNodeRange(TreeNode node)
+        {
+            if (previousSelectedNode == null || previousSelectedNode == node)
+                return;
+
+            bool isInRange = false;
+
+            //Loop through all the tree nodes to select a range
+            foreach (var n in Nodes)
+                if (SelectNodeRange(n, previousSelectedNode, node, ref isInRange))
+                    break;
+        }
+
+        private bool SelectNodeRange(TreeNode node, TreeNode selectedNode1, TreeNode selectedNode2, ref bool isInRange)
+        {
+            //Node has found proper range
+            bool isHit = node == selectedNode1 || node == selectedNode2;
+            //Node range has been fully reached
+            if (isHit && isInRange) {
+                OnSelectionChanged?.Invoke(this, EventArgs.Empty);
+                return true;
+            }
+
+            //Select nodes within range
+            if (isInRange)
+                node.IsSelected = true;
+
+            //Range started so start selecting the nodes
+            if (isHit)
+                isInRange = true;
+
+            if (node.IsExpanded)
+            {
+                foreach (var c in node.Children)
+                    if (SelectNodeRange(c, selectedNode1, selectedNode2, ref isInRange))
+                        break;
+            }
+            return false;
+        }
+
         private void HandleRenaming(TreeNode node, bool leftClicked)
         {
+            //Node forcefully renamed
+            if (node.ActivateRename)
+            {
+                //Name edit executed. Setup data for renaming.
+                isNameEditing = true;
+                _renameText = node.Header;
+                renameNode = node;
+                //Reset the time
+                renameClickTime = 0;
+                return;
+            }
+
             bool renameStarting = renameClickTime != 0;
             bool wasCancelled = false;
-
-            Console.WriteLine($"leftClicked {leftClicked}");
 
             //Mouse click before editing started cancels the event
             if (renameStarting && leftClicked)
@@ -311,14 +494,11 @@ namespace UIFramework
                 renameStarting = false;
                 wasCancelled = true;
             }
-
             //Check for delay
             if (renameStarting)
             {
                 //Create a delay between actions. This can be cancelled out during a mouse click
                 var diff = ImGui.GetTime() - renameClickTime;
-                Console.WriteLine($"renameStarting {diff} > {RENAME_DELAY_TIME}");
-
                 if (diff > RENAME_DELAY_TIME)
                 {
                     //Name edit executed. Setup data for renaming.
@@ -345,13 +525,18 @@ namespace UIFramework
             //Make the textbox frame background blend with the tree background
             //This is so we don't see the highlight color and can see text clearly
             ImGui.PushStyleColor(ImGuiCol.FrameBg, bg);
-            ImGui.PushStyleColor(ImGuiCol.Border, new Vector4(1, 1, 1, 1));
+            ImGui.PushStyleColor(ImGuiCol.Border, new Vector4(1, 1, 1, 0.2F));
             ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1);
+            ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 0);
 
             var length = ImGui.CalcTextSize(_renameText).X + 20;
             ImGui.PushItemWidth(length);
 
             ImGuiHelper.IncrementCursorPosX(-4);
+
+            if (!ImGui.IsAnyItemActive() && !ImGui.IsMouseClicked(0))
+                ImGui.SetKeyboardFocusHere(0);
+
             if (ImGui.InputText("##RENAME_NODE", ref _renameText, 512,
                 ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.CallbackCompletion |
                 ImGuiInputTextFlags.CallbackHistory | ImGuiInputTextFlags.NoHorizontalScroll |
@@ -360,19 +545,29 @@ namespace UIFramework
                 node.Header = _renameText;
                 node.OnHeaderRenamed?.Invoke(this, EventArgs.Empty);
 
+                node.ActivateRename = false;
                 isNameEditing = false;
             }
-            if (!ImGui.IsAnyItemActive() && !ImGui.IsMouseClicked(0))
-                ImGui.SetKeyboardFocusHere(0);
 
-            if (!ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+            if (!ImGui.IsItemHovered() && (ImGui.IsMouseClicked(ImGuiMouseButton.Left) ||
+                                          ImGui.IsMouseClicked(ImGuiMouseButton.Right)))
             {
+                node.Header = _renameText;
+                node.OnHeaderRenamed?.Invoke(this, EventArgs.Empty);
+
+                node.ActivateRename = false;
                 isNameEditing = false;
             }
 
             ImGui.PopItemWidth();
-            ImGui.PopStyleVar();
+            ImGui.PopStyleVar(2);
             ImGui.PopStyleColor(2);
+
+            if (ColumnCount > 1)
+            {
+                for (int i = 0; i < ColumnCount; i++)
+                    ImGui.NextColumn();
+            }
         }
 
         private void HandleCheckbox(TreeNode node)
@@ -416,6 +611,8 @@ namespace UIFramework
 
         private void HandleDragDrop(TreeNode node)
         {
+            SelectionBox.Enabled = false;
+
             //Placeholder pointer data. Instead use drag/drop nodes from GetDragDropNode()
             GCHandle handle1 = GCHandle.Alloc(node.ID);
             ImGui.SetDragDropPayload("OUTLINER_ITEM", (IntPtr)handle1, sizeof(int), ImGuiCond.Once);
@@ -474,7 +671,7 @@ namespace UIFramework
                 //Make sure the "IsExpanded" can force the node to expand
                 ImGui.SetNextItemOpen(true);
             }
-            if (SelectedNodes.Contains(node))
+            if (node.IsSelected)
                 flags |= ImGuiTreeNodeFlags.Selected;
 
             return flags;

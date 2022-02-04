@@ -11,7 +11,7 @@ namespace UIFramework
     /// <summary>
     /// Represents a single tree node for rendering into a tree view UI.
     /// </summary>
-    public class TreeNode
+    public class TreeNode : ISelectableElement
     {
         public EventHandler OnHeaderChanged;
         public EventHandler OnSelected;
@@ -68,6 +68,11 @@ namespace UIFramework
         /// Determines if the node can rename or not.
         /// </summary>
         public virtual bool CanRename { get; set; } = false;
+
+        /// <summary>
+        /// Makes the current tree node in rename mode;
+        /// </summary>
+        public virtual bool ActivateRename { get; set; } = false;
 
         /// <summary>
         /// Determines if the node can drag/drop or not.
