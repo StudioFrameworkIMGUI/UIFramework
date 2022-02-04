@@ -33,6 +33,8 @@ namespace UIFramework
         public EventHandler OnNodeChecked;
         public EventHandler OnNodeLeftClicked;
 
+        public TreeNode GetDroppedTreeNode() => dragDroppedNode;
+
         //Scroll handling
         protected float ScrollX;
         protected float ScrollY;
@@ -409,11 +411,17 @@ namespace UIFramework
 
             dragDroppedNode = node;
 
+            ImGuiHelper.IncrementCursorPosX(3);
+
             //Display icon
+            ImGuiHelper.IncrementCursorPosX(4);
+
+            ImGui.AlignTextToFramePadding();
             TryDrawNodeIcon(node);
 
             //Display text for item being dragged
-            ImGui.Button($"{node.Header}");
+            ImGui.AlignTextToFramePadding();
+            ImGui.Text($"{node.Header}");
             ImGui.EndDragDropSource();
         }
 
