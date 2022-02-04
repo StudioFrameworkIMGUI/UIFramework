@@ -417,7 +417,7 @@ namespace UIFramework
             ImGuiHelper.IncrementCursorPosX(4);
 
             ImGui.AlignTextToFramePadding();
-            TryDrawNodeIcon(node);
+            TryDrawNodeIcon(node, true);
 
             //Display text for item being dragged
             ImGui.AlignTextToFramePadding();
@@ -425,10 +425,10 @@ namespace UIFramework
             ImGui.EndDragDropSource();
         }
 
-        private void TryDrawNodeIcon(TreeNode node)
+        private void TryDrawNodeIcon(TreeNode node, bool isDragDrop = false)
         {
             //Ajudst position if using checkbox
-            if (node.HasCheckBox)
+            if (node.HasCheckBox && !isDragDrop)
                 ImGuiHelper.IncrementCursorPosX(5);
 
             node.IconDrawer?.Invoke(this, EventArgs.Empty);

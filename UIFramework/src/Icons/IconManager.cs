@@ -10,7 +10,7 @@ namespace UIFramework
     public class IconManager
     {
         public const char FOLDER_ICON = '\ue067';
-        public const char FILE_ICON = '\ue061';
+        public const char FILE_ICON = '\uf15b';
         public const char SEARCH_ICON = '\uf002';
 
         private static Vector4 FOLDER_COLOR = new Vector4(0.921f, 0.78f, 0.376f, 1.0f);
