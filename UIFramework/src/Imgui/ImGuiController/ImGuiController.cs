@@ -101,8 +101,8 @@ namespace UIFramework
             float fontSize = 16.0f;
 
             AddFontFromFileTTF($"{Globals.ExecutableDir}\\Lib\\Fonts\\OpenFontIcons.ttf", fontSize, config, new[] { min, max, (char)0 });
-            AddFontFromFileTTF($"{Globals.ExecutableDir}\\Lib\\Fonts\\fa-regular-400.ttf", fontSize, config, new[] { (char)0xe005, (char)0xf8ff, (char)0 });
             AddFontFromFileTTF($"{Globals.ExecutableDir}\\Lib\\Fonts\\fa-solid-900.ttf", fontSize, config, new[] { (char)0xe005, (char)0xf8ff, (char)0 });
+            AddFontFromFileTTF($"{Globals.ExecutableDir}\\Lib\\Fonts\\fa-regular-400.ttf", fontSize, config, new[] { (char)0xe005, (char)0xf8ff, (char)0 });
 
             //Font needs a slight shift.
             config.GlyphMinAdvanceX = 12;
