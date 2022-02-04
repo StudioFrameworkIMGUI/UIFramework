@@ -9,6 +9,50 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Shaders\GLSL\imgui-frag.glsl" />
+    <None Remove="Shaders\GLSL\imgui-vertex.glsl" />
+    <None Remove="Shaders\HLSL\imgui-frag.hlsl" />
+    <None Remove="Shaders\HLSL\imgui-frag.hlsl.bytes" />
+    <None Remove="Shaders\HLSL\imgui-vertex.hlsl" />
+    <None Remove="Shaders\HLSL\imgui-vertex.hlsl.bytes" />
+    <None Remove="Shaders\Metal\imgui-frag.metal" />
+    <None Remove="Shaders\Metal\imgui-frag.metallib" />
+    <None Remove="Shaders\Metal\imgui-vertex.metal" />
+    <None Remove="Shaders\Metal\imgui-vertex.metallib" />
+    <None Remove="Shaders\SPIR-V\imgui-frag.glsl" />
+    <None Remove="Shaders\SPIR-V\imgui-frag.spv" />
+    <None Remove="Shaders\SPIR-V\imgui-vertex.glsl" />
+    <None Remove="Shaders\SPIR-V\imgui-vertex.spv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Shaders\GLSL\imgui-frag.glsl">
+      <LogicalName>imgui-frag.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shaders\GLSL\imgui-vertex.glsl">
+      <LogicalName>imgui-vertex.glsl</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shaders\HLSL\imgui-frag.hlsl.bytes">
+      <LogicalName>imgui-frag.hlsl.bytes</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shaders\HLSL\imgui-vertex.hlsl.bytes">
+      <LogicalName>imgui-vertex.hlsl.bytes</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shaders\Metal\imgui-frag.metallib">
+      <LogicalName>imgui-frag.metallib</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shaders\Metal\imgui-vertex.metallib">
+      <LogicalName>imgui-vertex.metallib</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shaders\SPIR-V\imgui-frag.spv">
+      <LogicalName>imgui-frag.spv</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Shaders\SPIR-V\imgui-vertex.spv">
+      <LogicalName>imgui-vertex.spv</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="ImGui.NET">
       <HintPath>lib\ImGui.NET.dll</HintPath>
     </Reference>
@@ -58,8 +102,27 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="OpenTK" Version="3.2.0" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.2-mauipre.1.22054.8" />
+    <PackageReference Include="Veldrid" Version="4.9.0-beta1" />
+    <PackageReference Include="Veldrid.SDL2" Version="4.9.0-beta1" />
+    <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-beta1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Shaders\GLSL\imgui-frag.glsl" />
+    <Resource Include="Shaders\GLSL\imgui-vertex.glsl" />
+    <Resource Include="Shaders\HLSL\imgui-frag.hlsl" />
+    <Resource Include="Shaders\HLSL\imgui-frag.hlsl.bytes" />
+    <Resource Include="Shaders\HLSL\imgui-vertex.hlsl" />
+    <Resource Include="Shaders\HLSL\imgui-vertex.hlsl.bytes" />
+    <Resource Include="Shaders\Metal\imgui-frag.metal" />
+    <Resource Include="Shaders\Metal\imgui-frag.metallib" />
+    <Resource Include="Shaders\Metal\imgui-vertex.metal" />
+    <Resource Include="Shaders\Metal\imgui-vertex.metallib" />
+    <Resource Include="Shaders\SPIR-V\generate-spirv.bat" />
+    <Resource Include="Shaders\SPIR-V\imgui-frag.glsl" />
+    <Resource Include="Shaders\SPIR-V\imgui-frag.spv" />
+    <Resource Include="Shaders\SPIR-V\imgui-vertex.glsl" />
+    <Resource Include="Shaders\SPIR-V\imgui-vertex.spv" />
   </ItemGroup>
 
 </Project>

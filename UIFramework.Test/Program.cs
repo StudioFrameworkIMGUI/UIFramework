@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Numerics;
+using Veldrid;
+using Veldrid.Sdl2;
+using Veldrid.StartupUtilities;
+using ImGuiNET;
+using System.Runtime.InteropServices;
 using UIFramework;
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Graphics;
-using System.Reflection;
 
 namespace UIFramework.Test
 {
@@ -10,18 +14,11 @@ namespace UIFramework.Test
     {
         static void Main(string[] args)
         {
-            //Load the window and run the application
-            GraphicsMode mode = new GraphicsMode(new ColorFormat(32), 24, 8, 4, new ColorFormat(32), 2, false);
-            MainWindow wnd = new MainWindow(mode, "UIFramework Test");
-            wnd.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
-            wnd.VSync = OpenTK.VSyncMode.On;
-            wnd.MenuItems.Add(new MenuItem("Test Item", () =>
-            {
+            GraphicsBackend graphicsBackend = VeldridStartup.GetPlatformDefaultBackend();
+            if (GraphicsDevice.IsBackendSupported(GraphicsBackend.Vulkan))
+                graphicsBackend = GraphicsBackend.Vulkan;
 
-            }));
-            wnd.Windows.Add(new TestWindow());
-
-            wnd.Run();
+            Framework.Run(new MainWindowTest(), "UIFramework.Test", graphicsBackend);
         }
     }
 }

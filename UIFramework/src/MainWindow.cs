@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenTK;
-using OpenTK.Input;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL;
+using Veldrid;
+using Veldrid.Sdl2;
 using ImGuiNET;
 using System.ComponentModel;
 
 namespace UIFramework
 {
-    public class MainWindow : GameWindow
+    public class MainWindow 
     {
-        protected ImGuiController _controller;
-
         /// <summary>
         /// Windows attached to the main window.
         /// </summary>
@@ -26,9 +22,10 @@ namespace UIFramework
         /// </summary>
         public List<MenuItem> MenuItems = new List<MenuItem>();
 
-        private bool ForceFocus = false;
+        public static bool ForceFocus = false;
 
         //General window info
+        private static Sdl2Window _window;
         float font_scale = 1.0f;
         bool fullscreen = true;
         bool p_open = true;
@@ -39,20 +36,12 @@ namespace UIFramework
         private uint dock_id;
         private unsafe ImGuiWindowClass* window_class;
 
-        public MainWindow(GraphicsMode gMode, string name) : base(1600, 900, gMode, name,
-                               GameWindowFlags.Default,
-                               DisplayDevice.Default,
-                               3, 2, GraphicsContextFlags.Default)
+        public MainWindow() {}
+
+        internal void Init(Sdl2Window window) => _window = window;
+
+        public void OnLoad()
         {
-
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-
-            _controller = new ImGuiController(Width, Height);
-
             //Disable the docking buttons
             ImGui.GetStyle().WindowMenuButtonPosition = ImGuiDir.None;
 
@@ -63,8 +52,6 @@ namespace UIFramework
             ImGui.GetIO().ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard;
             //Only move via the title bar instead of the whole window
             ImGui.GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
-            //Share resources between contexts
-            GraphicsContext.ShareContexts = true;
 
             //Load theme files
             ThemeHandler.Load();
@@ -72,38 +59,7 @@ namespace UIFramework
             InitDock();
         }
 
-        protected override void OnRenderFrame(FrameEventArgs e) {
-            if (renderingFrame) return;
-
-            //Only allow updating the frame once if the frame requires updating in a seperate part of the code
-
-            base.OnRenderFrame(e);
-
-            //Don't render each time if the application is not doing anything
-            //This saves on CPU performance
-            if (!this.Focused && !ForceFocus) {
-                System.Threading.Thread.Sleep(1);
-                return;
-            }
-
-            renderingFrame = true;
-
-            //Only force the focus once to update the rendered frame
-            if (ForceFocus)
-                ForceFocus = false;
-
-            //Update the controller
-            _controller.Update(this, (float)e.Time);
-
-            RenderWindow();
-
-            _controller.Render();
-            SwapBuffers();
-
-            renderingFrame = false;
-        }
-
-        private void RenderWindow()
+        public void OnRenderFrame()
         {
             ImGuiWindowFlags window_flags = ImGuiWindowFlags.NoDocking;
 
@@ -137,10 +93,6 @@ namespace UIFramework
             Render();
 
             ImGui.End();
-
-            //Reset FBO info back to backbuffer
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.Viewport(0, 0, Width, Height);
         }
 
         public virtual void Render()
@@ -156,28 +108,13 @@ namespace UIFramework
                 window.Show();
         }
 
-        protected override void OnResize(EventArgs e)
+        public virtual void OnResize(int width, int height)
         {
-            base.OnResize(e);
 
-            // Tell ImGui of the new size
-            _controller.WindowResized(Width, Height);
         }
 
-        protected override void OnFileDrop(FileDropEventArgs e)
+        public virtual void OnFileDrop(string fileName)
         {
-            base.OnFileDrop(e);
-        }
-
-        protected override void OnKeyPress(KeyPressEventArgs e)
-        {
-            base.OnKeyPress(e);
-            _controller.PressChar(e.KeyChar);
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
         }
 
         private unsafe void InitDock()
