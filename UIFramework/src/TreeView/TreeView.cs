@@ -251,41 +251,7 @@ namespace UIFramework
             {
                 //Check for rename selection on selected renamable node
                 if (node.IsSelected && node.CanRename && RENAME_ENABLE)
-                {
-                    bool renameStarting = renameClickTime != 0;
-                    bool wasCancelled = false;
-
-                    //Mouse click before editing started cancels the event
-                    if (renameStarting && leftClicked)
-                    {
-                        renameClickTime = 0;
-                        renameStarting = false;
-                        wasCancelled = true;
-                    }
-
-                    //Check for delay
-                    if (renameStarting)
-                    {
-                        //Create a delay between actions. This can be cancelled out during a mouse click
-                        var diff = ImGui.GetTime() - renameClickTime;
-                        if (diff > RENAME_DELAY_TIME)
-                        {
-                            //Name edit executed. Setup data for renaming.
-                            isNameEditing = true;
-                            _renameText = node.Header;
-                            renameNode = node;
-                            //Reset the time
-                            renameClickTime = 0;
-                        }
-                    }
-
-                    //User has started a rename click. Start a time check
-                    if (leftClicked && renameClickTime == 0 && !wasCancelled)
-                    {
-                        //Do a small delay for the rename event
-                        renameClickTime = ImGui.GetTime();
-                    }
-                }
+                    HandleRenaming(node, leftClicked && !leftDoubleClicked);
 
                 //Deselect node during ctrl held when already selected
                 if (leftClicked && ImGui.GetIO().KeyCtrl && node.IsSelected)
@@ -331,6 +297,47 @@ namespace UIFramework
             }
         }
 
+        private void HandleRenaming(TreeNode node, bool leftClicked)
+        {
+            bool renameStarting = renameClickTime != 0;
+            bool wasCancelled = false;
+
+            Console.WriteLine($"leftClicked {leftClicked}");
+
+            //Mouse click before editing started cancels the event
+            if (renameStarting && leftClicked)
+            {
+                renameClickTime = 0;
+                renameStarting = false;
+                wasCancelled = true;
+            }
+
+            //Check for delay
+            if (renameStarting)
+            {
+                //Create a delay between actions. This can be cancelled out during a mouse click
+                var diff = ImGui.GetTime() - renameClickTime;
+                Console.WriteLine($"renameStarting {diff} > {RENAME_DELAY_TIME}");
+
+                if (diff > RENAME_DELAY_TIME)
+                {
+                    //Name edit executed. Setup data for renaming.
+                    isNameEditing = true;
+                    _renameText = node.Header;
+                    renameNode = node;
+                    //Reset the time
+                    renameClickTime = 0;
+                }
+            }
+
+            //User has started a rename click. Start a time check
+            if (leftClicked && renameClickTime == 0 && !wasCancelled)
+            {
+                //Do a small delay for the rename event
+                renameClickTime = ImGui.GetTime();
+            }
+        }
+
         private void DrawRenamingNode(TreeNode node)
         {
             var bg = ImGui.GetStyle().Colors[(int)ImGuiCol.WindowBg];
@@ -344,15 +351,20 @@ namespace UIFramework
             var length = ImGui.CalcTextSize(_renameText).X + 20;
             ImGui.PushItemWidth(length);
 
+            ImGuiHelper.IncrementCursorPosX(-4);
             if (ImGui.InputText("##RENAME_NODE", ref _renameText, 512,
                 ImGuiInputTextFlags.EnterReturnsTrue | ImGuiInputTextFlags.CallbackCompletion |
-                ImGuiInputTextFlags.CallbackHistory | ImGuiInputTextFlags.NoHorizontalScroll))
+                ImGuiInputTextFlags.CallbackHistory | ImGuiInputTextFlags.NoHorizontalScroll |
+                ImGuiInputTextFlags.AutoSelectAll))
             {
                 node.Header = _renameText;
                 node.OnHeaderRenamed?.Invoke(this, EventArgs.Empty);
 
                 isNameEditing = false;
             }
+            if (!ImGui.IsAnyItemActive() && !ImGui.IsMouseClicked(0))
+                ImGui.SetKeyboardFocusHere(0);
+
             if (!ImGui.IsItemHovered() && ImGui.IsMouseClicked(ImGuiMouseButton.Left))
             {
                 isNameEditing = false;
