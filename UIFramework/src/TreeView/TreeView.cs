@@ -526,8 +526,8 @@ namespace UIFramework
             //This is so we don't see the highlight color and can see text clearly
             ImGui.PushStyleColor(ImGuiCol.FrameBg, bg);
             ImGui.PushStyleColor(ImGuiCol.Border, new Vector4(1, 1, 1, 0.2F));
-            ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1);
-            ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 0);
+            ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1.5f);
+            ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 2);
 
             var length = ImGui.CalcTextSize(_renameText).X + 20;
             ImGui.PushItemWidth(length);

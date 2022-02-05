@@ -14,7 +14,7 @@ namespace UIFramework
         public TreeView TreeView = new TreeView();
 
         public TestWindow() {
-            FillTree();
+            FillTreeColumnView();
         }
 
         private void FillTreeColumnView()
