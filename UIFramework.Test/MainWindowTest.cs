@@ -17,21 +17,21 @@ namespace UIFramework
         {
             this.MenuItems.Add(new MenuItem("Test", Add));
 
-            var window = new TestWindow();
+            var window = new TestWindow(DockSpace);
             window.DockDirection = ImGuiDir.Left;
             window.SplitRatio = 0.25f;
             DockSpace.DockedWindows.Add(window);
 
-            DockSpace.DockedWindows.Add(new DockWindow("Document")
+            DockSpace.DockedWindows.Add(new DockWindow(DockSpace,"Document")
             {
                 DockDirection = ImGuiDir.None,
             });
-            DockSpace.DockedWindows.Add(new DockWindow("Properties")
+            DockSpace.DockedWindows.Add(new DockWindow(DockSpace, "Properties")
             {
                 DockDirection = ImGuiDir.Right,
                 SplitRatio = 0.25f,
             });
-            DockSpace.DockedWindows.Add(new DockWindow("Console")
+            DockSpace.DockedWindows.Add(new DockWindow(DockSpace, "Console")
             {
                 DockDirection = ImGuiDir.Down,
                 SplitRatio = 0.25f,

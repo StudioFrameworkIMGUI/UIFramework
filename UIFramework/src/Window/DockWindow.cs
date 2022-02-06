@@ -30,11 +30,22 @@ namespace UIFramework
         /// </summary>
         public uint DockID;
 
-        public DockWindow() { }
+        DockSpaceWindow Parent;
 
-        public DockWindow(string name) : base(name)
+        public DockWindow(DockSpaceWindow parent) {
+            Parent = parent;
+        }
+
+        public DockWindow(DockSpaceWindow parent, string name) : base(name)
         {
+            Parent = parent;
+        }
 
+        public override string GetWindowID()
+        {
+            if (Parent != null)
+                return $"{Parent.Name}_{Name}";
+            return this.Name;
         }
 
         public override string ToString()

@@ -75,7 +75,7 @@ namespace UIFramework
                     else
                         dock.DockID = ImGui.DockBuilderSplitNode(dock_main_id, dock.DockDirection, dock.SplitRatio, out uint dockOut, out dock_main_id);
                 }
-                ImGui.DockBuilderDockWindow(dock.Name, dock.DockID);
+                ImGui.DockBuilderDockWindow(dock.GetWindowName(), dock.DockID);
             }
             ImGui.DockBuilderFinish(dockspaceId);
 

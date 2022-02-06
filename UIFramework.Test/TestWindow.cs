@@ -13,7 +13,7 @@ namespace UIFramework
 
         public TreeView TreeView = new TreeView();
 
-        public TestWindow() {
+        public TestWindow(DockSpaceWindow parent) : base(parent) {
             FillTree();
         }
 

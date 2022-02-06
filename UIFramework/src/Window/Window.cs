@@ -28,6 +28,9 @@ namespace UIFramework
         private bool _windowClosing = false;
         private bool loaded = false;
 
+        public virtual string GetWindowID() => this.Name;
+        public virtual string GetWindowName() => $"{this.Name}##{this.GetWindowID()}";
+
         public Window() { }
 
         public Window(string name) {
@@ -48,7 +51,7 @@ namespace UIFramework
                 loaded = true;
             }
 
-            bool visible = ImGui.Begin(this.Name, ref Opened, Flags);
+            bool visible = ImGui.Begin(GetWindowName(), ref Opened, Flags);
             //Window is no longer opened so call the closing method
             if (!Opened && !_windowClosing) {
                 _windowClosing = true;
