@@ -30,6 +30,9 @@ namespace UIFramework
         bool fullscreen = true;
         bool p_open = true;
         ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags.None;
+        ImGuiWindowFlags window_flags;
+
+        public override ImGuiWindowFlags Flags => window_flags;
 
         public MainWindow() : base("dock_main")
         {}
@@ -59,7 +62,7 @@ namespace UIFramework
 
         public void OnRenderFrame()
         {
-            ImGuiWindowFlags window_flags = ImGuiWindowFlags.NoDocking;
+            window_flags = ImGuiWindowFlags.NoDocking;
 
             if (fullscreen)
             {
