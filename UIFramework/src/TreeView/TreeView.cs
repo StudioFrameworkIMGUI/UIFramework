@@ -469,7 +469,7 @@ namespace UIFramework
             {
                 foreach (var c in node.Children)
                     if (SelectNodeRange(c, selectedNode1, selectedNode2, ref isInRange))
-                        break;
+                        return true;
             }
             return false;
         }

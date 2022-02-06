@@ -67,7 +67,7 @@ namespace UIFramework
                 Bounding = new BoundingBox2D(min, max);
             }
             //Stop selection box
-            if (released && IsActive)
+            if ((!down || released) && IsActive)
             {
                 OnSelectionApplied?.Invoke(this, EventArgs.Empty);
                 Reset();

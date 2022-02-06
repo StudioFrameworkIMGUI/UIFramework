@@ -140,8 +140,6 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Veldrid" Version="4.9.0-beta1" />
-    <PackageReference Include="Veldrid.SDL2" Version="4.9.0-beta1" />
     <PackageReference Include="Veldrid.StartupUtilities" Version="4.9.0-beta1" />
   </ItemGroup>
 
