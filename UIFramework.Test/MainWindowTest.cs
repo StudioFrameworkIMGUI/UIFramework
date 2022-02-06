@@ -5,15 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using UIFramework;
 using Veldrid.Sdl2;
+using ImGuiNET;
 
 namespace UIFramework
 {
     public class MainWindowTest : MainWindow 
     {
+        DockSpaceWindow DockSpace = new DockSpaceWindow("DockSpace");
+
         public MainWindowTest() 
         {
             this.MenuItems.Add(new MenuItem("Test", Add));
-            this.Windows.Add(new TestWindow());
+
+            var window = new TestWindow();
+            window.DockDirection = ImGuiNET.ImGuiDir.Left;
+            window.SplitRatio = 0.4f;
+            DockSpace.AddDock(window);
         }
 
         private void Add()
@@ -31,6 +38,20 @@ namespace UIFramework
         public override void Render()
         {
             base.Render();
+
+            //  var contentSize = ImGui.GetWindowSize();
+
+            //Set the window size on load
+            // ImGui.SetNextWindowSize(contentSize, ImGuiCond.Once);
+
+            //Constrain the docked windows within a workspace using window classes
+
+            unsafe
+            {
+                ImGui.SetNextWindowClass(window_class);
+            }
+
+            DockSpace.Show();
         }
     }
 }

@@ -7,7 +7,7 @@ using ImGuiNET;
 
 namespace UIFramework
 {
-    public class TestWindow : Window
+    public class TestWindow : DockWindow
     {
         public override string Name => "Test";
 

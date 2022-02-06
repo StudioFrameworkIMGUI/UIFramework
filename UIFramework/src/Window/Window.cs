@@ -13,7 +13,7 @@ namespace UIFramework
         /// <summary>
         /// The name of the window.
         /// </summary>
-        public virtual string Name { get; } = "Window";
+        public virtual string Name { get; set; } = "Window";
 
         /// <summary>
         /// The flags of the window.
@@ -26,6 +26,7 @@ namespace UIFramework
         public bool Opened = true;
 
         private bool _windowClosing = false;
+        private bool loaded = false;
 
         /// <summary>
         /// Displays the window and renders it. This must be called during a render loop.
@@ -34,6 +35,12 @@ namespace UIFramework
         {
             if (!Opened)
                 return;
+
+            //Method for setting up stuff on load
+            if (!loaded) {
+                OnLoad();
+                loaded = true;
+            }
 
             bool visible = ImGui.Begin(this.Name, ref Opened, Flags);
             //Window is no longer opened so call the closing method
@@ -45,6 +52,11 @@ namespace UIFramework
                 Render();
                 ImGui.End();
             }
+        }
+
+        public virtual void OnLoad()
+        {
+
         }
 
         public void Close() => this.Opened = false;

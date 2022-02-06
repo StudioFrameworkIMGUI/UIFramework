@@ -28,7 +28,7 @@ namespace UIFramework
         /// <summary>
         /// The docking ID to identify this docking layout.
         /// </summary>
-        protected uint DockID;
+        public uint DockID;
 
         public override string ToString()
         {
