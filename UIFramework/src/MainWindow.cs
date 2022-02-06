@@ -33,7 +33,6 @@ namespace UIFramework
         bool renderingFrame = false;
 
         //docking data
-        private uint dock_id;
         public unsafe ImGuiWindowClass* window_class;
 
         public MainWindow() {}
@@ -56,8 +55,6 @@ namespace UIFramework
             //Load theme files
             ThemeHandler.Load();
             
-            dock_id = ImGui.GetID("##DockspaceRoot");
-
             InitDock();
         }
 
@@ -85,6 +82,8 @@ namespace UIFramework
 
             ImGui.Begin("WindowSpace", ref p_open, window_flags);
             ImGui.PopStyleVar(2);
+
+            var dock_id = ImGui.GetID("##DockspaceRoot");
 
             unsafe
             {

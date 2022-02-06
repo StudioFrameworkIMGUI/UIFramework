@@ -7,36 +7,79 @@ using ImGuiNET;
 
 namespace UIFramework
 {
+    /// <summary>
+    /// Represents a window to dock multiple docking windows.
+    /// </summary>
     public class DockSpaceWindow : Window
     {
+        /// <summary>
+        /// A list of dockable windows that can dock to this dockspace.
+        /// </summary>
+        public List<DockWindow> DockedWindows = new List<DockWindow>();
+
+        /// <summary>
+        /// Determines to reload the dock layout or not.
+        /// </summary>
+        public bool UpdateDockLayout = false;
+
         public unsafe ImGuiWindowClass* window_class;
 
-        DockSpace dockSpace = null;
-
-        public DockSpaceWindow(string name) 
-        {
+        public DockSpaceWindow(string name)  {
             Name = name;
-            dockSpace = new DockSpace($"##{name}DockSpace");
-        }
-
-        public void AddDock(DockWindow dock) {
-            dockSpace.DockedWindows.Add(dock);
-        }
-
-        public void RemoveDock(DockWindow dock) {
-            dockSpace.DockedWindows.Remove(dock);
-        }
-
-        public void ClearDocks() {
-            dockSpace.DockedWindows.Clear();
         }
 
         public override void Render()
         {
+            uint dockspaceId = ImGui.GetID($"{Name}ds");
+
             unsafe
             {
-                dockSpace.Render(window_class);
+                //Check if the dock has been created or needs to be updated
+                if (ImGui.DockBuilderGetNode(dockspaceId).NativePtr == null || this.UpdateDockLayout)
+                {
+                    ReloadDockLayout(dockspaceId);
+                }
+                ImGui.DockSpace(dockspaceId, new System.Numerics.Vector2(0, 0),
+                    ImGuiDockNodeFlags.CentralNode, window_class);
             }
+
+            foreach (var window in DockedWindows)
+                window.Show();
+        }
+
+        public void ReloadDockLayout(uint dockspaceId)
+        {
+            ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags.None;
+
+            ImGui.DockBuilderRemoveNode(dockspaceId); // Clear out existing layout
+            ImGui.DockBuilderAddNode(dockspaceId, dockspace_flags); // Add empty node
+
+            //This variable will track the document node
+            uint dock_main_id = dockspaceId;
+            //Reset IDs
+            foreach (var dock in DockedWindows)
+                dock.DockID = 0;
+
+            foreach (var dock in DockedWindows)
+            {
+                if (dock.DockDirection == ImGuiDir.None)
+                    dock.DockID = dock_main_id;
+                else
+                {
+                    //Search for the same dock ID to reuse if possible
+                    var dockedWindow = DockedWindows.FirstOrDefault(x => x != dock && x.DockDirection == dock.DockDirection && x.SplitRatio == dock.SplitRatio && x.ParentDock == dock.ParentDock);
+                    if (dockedWindow != null && dockedWindow.DockID != 0)
+                        dock.DockID = dockedWindow.DockID;
+                    else if (dock.ParentDock != null)
+                        dock.DockID = ImGui.DockBuilderSplitNode(dock.ParentDock.DockID, dock.DockDirection, dock.SplitRatio, out uint dockOut, out dock.ParentDock.DockID);
+                    else
+                        dock.DockID = ImGui.DockBuilderSplitNode(dock_main_id, dock.DockDirection, dock.SplitRatio, out uint dockOut, out dock_main_id);
+                }
+                ImGui.DockBuilderDockWindow(dock.Name, dock.DockID);
+            }
+            ImGui.DockBuilderFinish(dockspaceId);
+
+            UpdateDockLayout = false;
         }
 
         public override void OnLoad()

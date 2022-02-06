@@ -20,7 +20,7 @@ namespace UIFramework
             var window = new TestWindow();
             window.DockDirection = ImGuiNET.ImGuiDir.Left;
             window.SplitRatio = 0.4f;
-            DockSpace.AddDock(window);
+            DockSpace.DockedWindows.Add(window);
         }
 
         private void Add()
@@ -48,7 +48,6 @@ namespace UIFramework
                 //Set the window size on load
                 ImGui.SetNextWindowSize(contentSize, ImGuiCond.Once);
             }
-
             DockSpace.Show();
         }
     }
