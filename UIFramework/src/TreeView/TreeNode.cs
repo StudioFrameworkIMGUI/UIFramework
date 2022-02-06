@@ -202,7 +202,8 @@ namespace UIFramework
         /// </summary>
         public virtual void OnDoubleClicked()
         {
-
+            if (!IsExpanded && Children.Count > 0)
+                this.IsExpanded = true;
         }
 
         /// <summary>
