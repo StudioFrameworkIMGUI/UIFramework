@@ -18,7 +18,7 @@ namespace UIFramework
             this.MenuItems.Add(new MenuItem("Test", Add));
 
             var window = new TestWindow();
-            window.DockDirection = ImGuiNET.ImGuiDir.Left;
+            window.DockDirection = ImGuiDir.Left;
             window.SplitRatio = 0.25f;
             DockSpace.DockedWindows.Add(window);
 

@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace UIFramework
 {
-    public class MainWindow 
+    public class MainWindow : DockSpaceWindow
     {
         /// <summary>
         /// Windows attached to the main window.
@@ -30,16 +30,13 @@ namespace UIFramework
         bool fullscreen = true;
         bool p_open = true;
         ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags.None;
-        bool renderingFrame = false;
 
-        //docking data
-        public unsafe ImGuiWindowClass* window_class;
-
-        public MainWindow() {}
+        public MainWindow() : base("dock_main")
+        {}
 
         internal void Init(Sdl2Window window) => _window = window;
 
-        public void OnLoad()
+        public override void OnLoad()
         {
             //Disable the docking buttons
             ImGui.GetStyle().WindowMenuButtonPosition = ImGuiDir.None;
@@ -96,7 +93,7 @@ namespace UIFramework
             ImGui.End();
         }
 
-        public virtual void Render()
+        public override void Render()
         {
             if (ImGui.BeginMainMenuBar())
             {
