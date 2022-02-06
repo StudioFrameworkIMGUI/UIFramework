@@ -103,7 +103,7 @@ namespace UIFramework
             {
                 foreach (var item in MenuItems)
                     ImGuiHelper.DrawMenuItem(item);
-                ImGui.EndMenuBar();
+                ImGui.EndMainMenuBar();
             }
 
             foreach (var window in Windows)

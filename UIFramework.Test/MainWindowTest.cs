@@ -39,16 +39,14 @@ namespace UIFramework
         {
             base.Render();
 
-            //  var contentSize = ImGui.GetWindowSize();
-
-            //Set the window size on load
-            // ImGui.SetNextWindowSize(contentSize, ImGuiCond.Once);
-
-            //Constrain the docked windows within a workspace using window classes
+            var contentSize = ImGui.GetWindowSize();
 
             unsafe
             {
+                //Constrain the docked windows within a workspace using window classes
                 ImGui.SetNextWindowClass(window_class);
+                //Set the window size on load
+                ImGui.SetNextWindowSize(contentSize, ImGuiCond.Once);
             }
 
             DockSpace.Show();

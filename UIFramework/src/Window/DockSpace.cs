@@ -20,7 +20,7 @@ namespace UIFramework
         /// <summary>
         /// Determines to reload the dock layout or not.
         /// </summary>
-        public bool UpdateDockLayout = true;
+        public bool UpdateDockLayout = false;
 
         public bool Opened = true;
 
