@@ -58,7 +58,7 @@ namespace UIFramework
             _cl = _gd.ResourceFactory.CreateCommandList();
             _controller = new ImGuiController(_gd, _gd.MainSwapchain.Framebuffer.OutputDescription, _window.Width, _window.Height);
 
-            ApplicationWindow.OnLoad();
+            ApplicationWindow.OnApplicationLoad();
 
             // Main application loop
             while (_window.Exists)

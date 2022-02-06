@@ -36,8 +36,10 @@ namespace UIFramework
 
         internal void Init(Sdl2Window window) => _window = window;
 
-        public override void OnLoad()
+        public void OnApplicationLoad()
         {
+            this.Name = "WindowSpace";
+
             //Disable the docking buttons
             ImGui.GetStyle().WindowMenuButtonPosition = ImGuiDir.None;
 
@@ -77,24 +79,25 @@ namespace UIFramework
             //Set the adjustable global font scale
             ImGui.GetIO().FontGlobalScale = font_scale;
 
-            ImGui.Begin("WindowSpace", ref p_open, window_flags);
+            this.Show();
+
             ImGui.PopStyleVar(2);
-
-            var dock_id = ImGui.GetID("##DockspaceRoot");
-
-            unsafe
-            {
-                //Create an inital dock space for docking workspaces.
-                ImGui.DockSpace(dock_id, new System.Numerics.Vector2(0.0f, 0.0f), 0, window_class);
-            }
-
-            Render();
-
-            ImGui.End();
         }
 
         public override void Render()
         {
+            //Use window as a parent dock if no docks added
+            if (this.DockedWindows.Count == 0)
+            {
+                var dock_id = ImGui.GetID("##DockspaceRoot");
+
+                unsafe
+                {
+                    //Create an inital dock space for docking workspaces.
+                    ImGui.DockSpace(dock_id, new System.Numerics.Vector2(0.0f, 0.0f), 0, window_class);
+                }
+            }
+
             if (ImGui.BeginMainMenuBar())
             {
                 foreach (var item in MenuItems)
@@ -104,6 +107,8 @@ namespace UIFramework
 
             foreach (var window in Windows)
                 window.Show();
+
+            base.Render();
         }
 
         public virtual void OnResize(int width, int height)

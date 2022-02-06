@@ -11,7 +11,7 @@ namespace UIFramework
 {
     public class MainWindowTest : MainWindow 
     {
-        DockSpaceWindow DockSpace = new DockSpaceWindow("DockSpace");
+       // DockSpaceWindow DockSpace = new DockSpaceWindow("DockSpace");
 
         public MainWindowTest() 
         {
@@ -20,18 +20,18 @@ namespace UIFramework
             var window = new TestWindow();
             window.DockDirection = ImGuiDir.Left;
             window.SplitRatio = 0.25f;
-            DockSpace.DockedWindows.Add(window);
+            this.DockedWindows.Add(window);
 
-            DockSpace.DockedWindows.Add(new DockWindow("Document")
+            this.DockedWindows.Add(new DockWindow("Document")
             {
                 DockDirection = ImGuiDir.None,
             });
-            DockSpace.DockedWindows.Add(new DockWindow("Properties")
+            this.DockedWindows.Add(new DockWindow("Properties")
             {
                 DockDirection = ImGuiDir.Right,
                 SplitRatio = 0.25f,
             });
-            DockSpace.DockedWindows.Add(new DockWindow("Console")
+            this.DockedWindows.Add(new DockWindow("Console")
             {
                 DockDirection = ImGuiDir.Down,
                 SplitRatio = 0.25f,
@@ -55,15 +55,14 @@ namespace UIFramework
             base.Render();
 
             var contentSize = ImGui.GetWindowSize();
-
-            unsafe
+/* unsafe
             {
                 //Constrain the docked windows within a workspace using window classes
                 ImGui.SetNextWindowClass(window_class);
                 //Set the window size on load
                 ImGui.SetNextWindowSize(contentSize, ImGuiCond.Once);
             }
-            DockSpace.Show();
+            DockSpace.Show();*/
         }
     }
 }
