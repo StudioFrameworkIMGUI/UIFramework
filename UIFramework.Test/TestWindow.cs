@@ -14,7 +14,7 @@ namespace UIFramework
         public TreeView TreeView = new TreeView();
 
         public TestWindow() {
-            FillTreeColumnView();
+            FillTree();
         }
 
         private void FillTreeColumnView()
@@ -72,6 +72,8 @@ namespace UIFramework
                 ContextMenus.Add(new MenuItem(""));
                 ContextMenus.Add(new MenuItem("Add Folder", AddFolder));
                 ContextMenus.Add(new MenuItem("Add File", AddFile));
+                ContextMenus.Add(new MenuItem(""));
+                ContextMenus.Add(new MenuItem("Open Dialog", Add));
 
                 CanRename = true;
             }
@@ -85,6 +87,19 @@ namespace UIFramework
             {
                 AddChild(new FileNode("NewFile"));
             }
+
+            private void Add()
+            {
+                ImguiFileDialog dlg = new ImguiFileDialog();
+                dlg.AddFilter(".png", "png");
+                dlg.SaveDialog = false;
+                dlg.MultiSelect = true;
+                if (dlg.ShowDialog())
+                {
+
+                }
+            }
+            
         }
 
         public class ColumnNode : TreeNode

@@ -189,6 +189,10 @@ namespace UIFramework
                 if (ColumnCount > 1)
                     ImGui.Columns(1);
 
+                //Don't apply selection box if any items are hovered
+                if (ImGui.IsAnyItemHovered())
+                    SelectionBox.Enabled = false;
+
                 ImGui.EndChild();
             }
 
