@@ -28,6 +28,12 @@ namespace UIFramework
         private bool _windowClosing = false;
         private bool loaded = false;
 
+        public Window() { }
+
+        public Window(string name) {
+            Name = name;
+        }
+
         /// <summary>
         /// Displays the window and renders it. This must be called during a render loop.
         /// </summary>

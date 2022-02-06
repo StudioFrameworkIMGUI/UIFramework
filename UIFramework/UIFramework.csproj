@@ -161,4 +161,8 @@
     <Resource Include="Shaders\SPIR-V\imgui-vertex.spv" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="src\Properties\" />
+  </ItemGroup>
+
 </Project>

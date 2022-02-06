@@ -30,6 +30,13 @@ namespace UIFramework
         /// </summary>
         public uint DockID;
 
+        public DockWindow() { }
+
+        public DockWindow(string name) : base(name)
+        {
+
+        }
+
         public override string ToString()
         {
             return $"{Name}_{DockDirection}_{SplitRatio}_{DockID}";

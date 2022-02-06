@@ -19,8 +19,23 @@ namespace UIFramework
 
             var window = new TestWindow();
             window.DockDirection = ImGuiNET.ImGuiDir.Left;
-            window.SplitRatio = 0.4f;
+            window.SplitRatio = 0.25f;
             DockSpace.DockedWindows.Add(window);
+
+            DockSpace.DockedWindows.Add(new DockWindow("Document")
+            {
+                DockDirection = ImGuiDir.None,
+            });
+            DockSpace.DockedWindows.Add(new DockWindow("Properties")
+            {
+                DockDirection = ImGuiDir.Right,
+                SplitRatio = 0.25f,
+            });
+            DockSpace.DockedWindows.Add(new DockWindow("Console")
+            {
+                DockDirection = ImGuiDir.Down,
+                SplitRatio = 0.25f,
+            });
         }
 
         private void Add()
