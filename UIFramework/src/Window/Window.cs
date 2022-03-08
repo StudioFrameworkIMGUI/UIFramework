@@ -61,7 +61,7 @@ namespace UIFramework
                 _windowClosing = true;
                 WindowClosing?.Invoke(this, EventArgs.Empty);
                 OnWindowClosing();
-            }
+            } //Reset the closing event if the window was re opened
             else if (_windowClosing && Opened)
                 _windowClosing = false;
 
@@ -83,7 +83,11 @@ namespace UIFramework
         /// </summary>
         public virtual void Render()
         {
-
+            if (!loaded)
+            {
+                OnLoad();
+                loaded = true;
+            }
         }
 
         /// <summary>
