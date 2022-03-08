@@ -309,6 +309,7 @@ namespace UIFramework
             bool rightClicked = ImGui.IsItemClicked(ImGuiMouseButton.Right);
             bool isToggleOpened = ImGui.IsItemToggledOpen();
             bool beginDragDropSource = !isRenaming && node.CanDragDrop && ImGui.BeginDragDropSource();
+            var focused = ImGui.IsItemFocused();
 
             //Force left/right click during a context menu popup
             if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenBlockedByPopup))
@@ -363,7 +364,7 @@ namespace UIFramework
             bool nodeFocused = false;
             //Only check when the node focus is changed which gets activated during arrow keys
             //Imgui keeps IsItemFocused() on the node and only removes it during a left click
-            if (ImGui.IsItemFocused() && focusedNode != node)
+            if (focused && focusedNode != node)
             {
                 focusedNode = node;
                 nodeFocused = true;
