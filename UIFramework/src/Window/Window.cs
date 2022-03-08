@@ -25,6 +25,9 @@ namespace UIFramework
         /// </summary>
         public bool Opened = true;
 
+        //Events
+        public EventHandler WindowClosing;
+
         private bool _windowClosing = false;
         protected bool loaded = false;
 
@@ -55,6 +58,7 @@ namespace UIFramework
             //Window is no longer opened so call the closing method
             if (!Opened && !_windowClosing) {
                 _windowClosing = true;
+                WindowClosing?.Invoke(this, EventArgs.Empty);
                 OnWindowClosing();
             }
             if (visible) 
