@@ -56,11 +56,15 @@ namespace UIFramework
 
             bool visible = ImGui.Begin(GetWindowName(), ref Opened, Flags);
             //Window is no longer opened so call the closing method
-            if (!Opened && !_windowClosing) {
+            if (!Opened && !_windowClosing)
+            {
                 _windowClosing = true;
                 WindowClosing?.Invoke(this, EventArgs.Empty);
                 OnWindowClosing();
             }
+            else if (!_windowClosing && Opened)
+                _windowClosing = false;
+
             if (visible) 
                 Render();
             

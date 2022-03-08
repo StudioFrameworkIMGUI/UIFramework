@@ -25,6 +25,12 @@ namespace UIFramework
         private DockSpaceWindow LoadDockSpace(string name)
         {
             DockSpaceWindow DockSpace = new DockSpaceWindow(name);
+            DockSpace.WindowClosing += delegate
+            {
+                var message = TinyFileDialog.MessageBoxInfoYesNo("Wanna close?");
+                if (message != 1)
+                    DockSpace.Opened = true;
+            };
 
             this.MenuItems.Add(new MenuItem("Test", Add));
 
