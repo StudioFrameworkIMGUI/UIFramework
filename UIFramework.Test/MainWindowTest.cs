@@ -11,10 +11,21 @@ namespace UIFramework
 {
     public class MainWindowTest : MainWindow 
     {
-        DockSpaceWindow DockSpace = new DockSpaceWindow("DockSpace");
+        List<DockSpaceWindow> DockSpaces = new List<DockSpaceWindow>();
+
+        PropertyWindow PropertyWindow;
 
         public MainWindowTest() 
         {
+         //   Windows.Add(new Window("TEST_WINDOW"));
+            DockSpaces.Add(LoadDockSpace("Test1"));
+         //   DockSpaces.Add(LoadDockSpace("Test2"));
+        }
+
+        private DockSpaceWindow LoadDockSpace(string name)
+        {
+            DockSpaceWindow DockSpace = new DockSpaceWindow(name);
+
             this.MenuItems.Add(new MenuItem("Test", Add));
 
             var window = new TestWindow(DockSpace);
@@ -22,20 +33,31 @@ namespace UIFramework
             window.SplitRatio = 0.25f;
             DockSpace.DockedWindows.Add(window);
 
-            DockSpace.DockedWindows.Add(new DockWindow(DockSpace,"Document")
-            {
-                DockDirection = ImGuiDir.None,
-            });
-            DockSpace.DockedWindows.Add(new DockWindow(DockSpace, "Properties")
+            PropertyWindow = new PropertyWindow(DockSpace, "Properties")
             {
                 DockDirection = ImGuiDir.Right,
                 SplitRatio = 0.25f,
+            };
+
+            //Update properties
+            window.TreeView.OnSelectionChanged += (o, e) =>
+            {
+                var node = o as TreeNode;
+                if (node != null)
+                    PropertyWindow.SelectedProperty = node.Tag;
+            };
+
+            DockSpace.DockedWindows.Add(new DockWindow(DockSpace, "Document")
+            {
+                DockDirection = ImGuiDir.None,
             });
+            DockSpace.DockedWindows.Add(PropertyWindow);
             DockSpace.DockedWindows.Add(new DockWindow(DockSpace, "Console")
             {
                 DockDirection = ImGuiDir.Down,
                 SplitRatio = 0.25f,
             });
+            return DockSpace;
         }
 
         private void Add()
@@ -56,14 +78,18 @@ namespace UIFramework
 
             var contentSize = ImGui.GetWindowSize();
 
-            unsafe
+            foreach (var space in DockSpaces)
             {
-                //Constrain the docked windows within a workspace using window classes
-                ImGui.SetNextWindowClass(window_class);
-                //Set the window size on load
-                ImGui.SetNextWindowSize(contentSize, ImGuiCond.Once);
+                unsafe
+                {
+                    //Constrain the docked windows within a workspace using window classes
+                    ImGui.SetNextWindowClass(window_class);
+                    //Set the window size on load
+                    ImGui.SetNextWindowSize(contentSize, ImGuiCond.Once);
+                }
+
+                space.Show();
             }
-            DockSpace.Show();
         }
     }
 }

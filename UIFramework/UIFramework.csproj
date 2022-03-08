@@ -8,6 +8,11 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="deps\cimgui\win-x86\cimgui.dll">
       <PackagePath>runtimes/win-x86/native</PackagePath>
@@ -159,10 +164,6 @@
     <Resource Include="Shaders\SPIR-V\imgui-frag.spv" />
     <Resource Include="Shaders\SPIR-V\imgui-vertex.glsl" />
     <Resource Include="Shaders\SPIR-V\imgui-vertex.spv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="src\Properties\" />
   </ItemGroup>
 
 </Project>

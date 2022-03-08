@@ -84,6 +84,8 @@ namespace UIFramework
 
         public override void OnLoad()
         {
+            loaded = true;
+
             unsafe
             {
                 uint windowId = ImGui.GetID($"###window_{this.Name}");

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.ComponentModel;
 using System.Numerics;
 using ImGuiNET;
 
@@ -40,6 +40,10 @@ namespace UIFramework
             TreeNode root = new TreeNode("Root");
             TreeView.Nodes.Add(root);
 
+            TreeNode propNode = new TreeNode("PropertiesNode");
+            TreeView.Nodes.Add(propNode);
+            propNode.Tag = new TestProperties();
+
             root.AddChild(new FileNode("RenamableNode") { CanRename = true });
             root.AddChild(new FileNode("DragDropNode") { CanDragDrop = true });
             root.AddChild(new FileNode("CheckableNode") { HasCheckBox = true });
@@ -57,6 +61,21 @@ namespace UIFramework
                 ImGui.Text(node4.Header);
                 ImGuiHelper.EndBoldText();
             };
+        }
+
+        public class TestProperties
+        {
+            public float AFloat { get; set; } = 1.0f;
+            public bool ABoolean { get; set; } = true;
+
+            public Vector4 Float4 { get; set; } = new Vector4(1);
+
+            [Category("Transform")]
+            public Vector3 Scale { get; set; } = new Vector3(1, 1, 1);
+            [Category("Transform")]
+            public Vector3 Rotate { get; set; } = new Vector3(0, 0, 0);
+            [Category("Transform")]
+            public Vector3 Position { get; set; } = new Vector3(0, 0, 0);
         }
 
         public override void Render()

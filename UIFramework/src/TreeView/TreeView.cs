@@ -14,6 +14,10 @@ namespace UIFramework
         /// </summary>
         public List<TreeNode> Nodes = new List<TreeNode>();
 
+        public TreeNode SelectedNode() => SelectedNodes.FirstOrDefault();
+
+        public List<TreeNode> GetSelectedNodes() => SelectedNodes;
+
         /// <summary>
         /// The selected nodes of the tree view.
         /// </summary>

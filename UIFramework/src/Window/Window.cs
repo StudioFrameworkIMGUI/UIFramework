@@ -26,7 +26,7 @@ namespace UIFramework
         public bool Opened = true;
 
         private bool _windowClosing = false;
-        private bool loaded = false;
+        protected bool loaded = false;
 
         public virtual string GetWindowID() => this.Name;
         public virtual string GetWindowName() => $"{this.Name}##{this.GetWindowID()}";
@@ -57,10 +57,10 @@ namespace UIFramework
                 _windowClosing = true;
                 OnWindowClosing();
             }
-            if (visible) {
+            if (visible) 
                 Render();
-                ImGui.End();
-            }
+            
+            ImGui.End();
         }
 
         public virtual void OnLoad()

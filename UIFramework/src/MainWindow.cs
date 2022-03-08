@@ -57,7 +57,7 @@ namespace UIFramework
             //Load theme files
             ThemeHandler.Load();
             
-            InitDock();
+            OnLoad();
         }
 
         public void OnRenderFrame()
@@ -74,6 +74,7 @@ namespace UIFramework
                 ImGui.PushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
                 window_flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove;
                 window_flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
+                window_flags |= ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
             }
 
             if ((dockspace_flags & ImGuiDockNodeFlags.PassthruCentralNode) != 0)
@@ -121,16 +122,6 @@ namespace UIFramework
 
         public virtual void OnFileDrop(string fileName)
         {
-        }
-
-        private unsafe void InitDock()
-        {
-            uint windowId = ImGui.GetID($"###window_main");
-
-            var nativeConfig = ImGuiNative.ImGuiWindowClass_ImGuiWindowClass();
-            (*nativeConfig).ClassId = windowId;
-            (*nativeConfig).DockingAllowUnclassed = 0;
-            this.window_class = nativeConfig;
         }
     }
 }
