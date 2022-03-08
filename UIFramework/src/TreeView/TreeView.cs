@@ -14,6 +14,12 @@ namespace UIFramework
         /// </summary>
         public List<TreeNode> Nodes = new List<TreeNode>();
 
+        /// <summary>
+        /// The distance between the selectable node and the right side of the tree.
+        /// This region can use a selection box.
+        /// </summary>
+        public int NoSelectionWidth = 0;
+
         public TreeNode SelectedNode() => SelectedNodes.FirstOrDefault();
 
         public List<TreeNode> GetSelectedNodes() => SelectedNodes;
@@ -166,7 +172,7 @@ namespace UIFramework
             bool isWindowHovered = ImGui.IsWindowHovered();
 
             //Put the entire control within a child
-            if (ImGui.BeginChild("##tree_view1", new Vector2(width - 100, height - posY - 5)))
+            if (ImGui.BeginChild("##tree_view1", new Vector2(width - NoSelectionWidth, height - posY - 5)))
             {
                 IsFocused = ImGui.IsWindowFocused();
                 SelectionBox.Enabled = true;
