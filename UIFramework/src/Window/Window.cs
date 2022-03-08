@@ -62,7 +62,7 @@ namespace UIFramework
                 WindowClosing?.Invoke(this, EventArgs.Empty);
                 OnWindowClosing();
             }
-            else if (!_windowClosing && Opened)
+            else if (_windowClosing && Opened)
                 _windowClosing = false;
 
             if (visible) 
