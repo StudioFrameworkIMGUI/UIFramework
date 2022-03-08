@@ -22,6 +22,8 @@ namespace UIFramework
         /// </summary>
         public bool UpdateDockLayout = false;
 
+        public bool EnableDockSpace = true;
+
         public unsafe ImGuiWindowClass* window_class;
 
         public DockSpaceWindow(string name)  {
@@ -30,17 +32,22 @@ namespace UIFramework
 
         public override void Render()
         {
+            base.Render();
+
             uint dockspaceId = ImGui.GetID($"{Name}ds");
 
-            unsafe
+            if (EnableDockSpace)
             {
-                //Check if the dock has been created or needs to be updated
-                if (ImGui.DockBuilderGetNode(dockspaceId).NativePtr == null || this.UpdateDockLayout)
+                unsafe
                 {
-                    ReloadDockLayout(dockspaceId);
+                    //Check if the dock has been created or needs to be updated
+                    if (ImGui.DockBuilderGetNode(dockspaceId).NativePtr == null || this.UpdateDockLayout)
+                    {
+                        ReloadDockLayout(dockspaceId);
+                    }
+                    ImGui.DockSpace(dockspaceId, new System.Numerics.Vector2(0, 0),
+                        ImGuiDockNodeFlags.CentralNode, window_class);
                 }
-                ImGui.DockSpace(dockspaceId, new System.Numerics.Vector2(0, 0),
-                    ImGuiDockNodeFlags.CentralNode, window_class);
             }
 
             foreach (var window in DockedWindows)

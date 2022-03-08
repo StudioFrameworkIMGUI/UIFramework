@@ -17,6 +17,8 @@ namespace UIFramework
 
         public MainWindowTest() 
         {
+            EnableDockSpace = false;
+
          //   Windows.Add(new Window("TEST_WINDOW"));
             DockSpaces.Add(LoadDockSpace("Test1"));
          //   DockSpaces.Add(LoadDockSpace("Test2"));
@@ -32,7 +34,7 @@ namespace UIFramework
                     DockSpace.Opened = true;
             };
 
-            this.MenuItems.Add(new MenuItem("Test", Add));
+          //  this.MenuItems.Add(new MenuItem("Test", Add));
 
             var window = new TestWindow(DockSpace);
             window.DockDirection = ImGuiDir.Left;
@@ -81,6 +83,13 @@ namespace UIFramework
         public override void Render()
         {
             base.Render();
+
+            //A non docking setup
+            if (!EnableDockSpace)
+            {
+                DockSpaces[0].Render();
+                return;
+            }
 
             var contentSize = ImGui.GetWindowSize();
 

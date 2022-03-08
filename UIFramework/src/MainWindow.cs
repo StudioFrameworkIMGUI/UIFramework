@@ -91,7 +91,7 @@ namespace UIFramework
         public override void Render()
         {
             //Use window as a parent dock if no docks added
-            if (this.DockedWindows.Count == 0)
+            if (EnableDockSpace && this.DockedWindows.Count == 0)
             {
                 var dock_id = ImGui.GetID("##DockspaceRoot");
 
