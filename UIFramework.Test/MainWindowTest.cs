@@ -26,8 +26,6 @@ namespace UIFramework
         {
             DockSpaceWindow DockSpace = new DockSpaceWindow(name);
 
-            this.MenuItems.Add(new MenuItem("Test", Add));
-
             var window = new TestWindow(DockSpace);
             window.DockDirection = ImGuiDir.Left;
             window.SplitRatio = 0.25f;

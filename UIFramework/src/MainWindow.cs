@@ -102,11 +102,14 @@ namespace UIFramework
                 }
             }
 
-            if (ImGui.BeginMainMenuBar())
+            if (MenuItems.Count > 0)
             {
-                foreach (var item in MenuItems)
-                    ImGuiHelper.DrawMenuItem(item);
-                ImGui.EndMainMenuBar();
+                if (ImGui.BeginMainMenuBar())
+                {
+                    foreach (var item in MenuItems)
+                        ImGuiHelper.DrawMenuItem(item);
+                    ImGui.EndMainMenuBar();
+                }
             }
 
             foreach (var window in Windows)
