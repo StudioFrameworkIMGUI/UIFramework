@@ -17,7 +17,7 @@ namespace UIFramework
 
         public MainWindowTest() 
         {
-            EnableDockSpace = false;
+            EnableDockSpace = true;
 
          //   Windows.Add(new Window("TEST_WINDOW"));
             DockSpaces.Add(LoadDockSpace("Test1"));
