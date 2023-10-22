@@ -17,8 +17,8 @@ namespace UIFramework
             var frameSize = style.FramePadding;
             var itemSpacing = style.ItemSpacing;
 
-            style.ItemSpacing = (new Vector2(itemSpacing.X, 2));
-            style.FramePadding = (new Vector2(frameSize.X, 2));
+           // style.ItemSpacing = (new Vector2(itemSpacing.X, 2));
+          //  style.FramePadding = (new Vector2(frameSize.X, 2));
 
             float width = ImGui.GetWindowWidth();
 

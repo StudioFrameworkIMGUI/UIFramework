@@ -113,7 +113,7 @@ namespace UIFramework
             foreach (var theme in Directory.GetFiles(folder)) {
                Themes.Add(JsonConvert.DeserializeObject<ThemeHandler>(File.ReadAllText(theme)));
             }
-            TryUpdateTheme("DARK_BLUE_THEME");
+            TryUpdateTheme("DARK_THEME");
         }
 
         public static void Save()
