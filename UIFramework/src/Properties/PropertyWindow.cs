@@ -10,7 +10,7 @@ namespace UIFramework
     {
         public EventHandler PropertyChanged;
 
-        public object SelectedProperty;
+        public TreeNode SelectedNode;
 
         public PropertyWindow(DockSpaceWindow space, string name) : base(space)
         {
@@ -19,8 +19,10 @@ namespace UIFramework
 
         public override void Render()
         {
-            if (SelectedProperty != null)
-                ImguiBinder.LoadProperties(SelectedProperty, PropertyChanged);
+            SelectedNode?.PropertyDrawer?.Invoke();
+
+            if (SelectedNode != null && SelectedNode.Tag != null)
+                ImguiBinder.LoadProperties(SelectedNode.Tag, PropertyChanged);
         }
     }
 }

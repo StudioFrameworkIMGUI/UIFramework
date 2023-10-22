@@ -21,6 +21,7 @@ namespace UIFramework
         //Render events
         public EventHandler IconDrawer;
         public EventHandler RenderOverride;
+        public Action PropertyDrawer;
 
         /// <summary>
         /// Gets or sets the header of the tree node.
