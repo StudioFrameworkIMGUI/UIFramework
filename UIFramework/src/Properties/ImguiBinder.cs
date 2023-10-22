@@ -26,22 +26,11 @@ namespace UIFramework
             var properties = obj.GetType().GetProperties();
             string category = "Properties";
 
-            //Determine how to categorize
-            for (int i = 0; i < properties.Length; i++)
-            {
-                var categoryAttribute = properties[i].GetCustomAttribute<CategoryAttribute>();
+            ImGui.Columns(2);
 
-                if (categoryAttribute != null)
-                    category = categoryAttribute.Category;
+            string activeDropdown = "";
+            bool showDropdown = true;
 
-                if (!categories.ContainsKey(category))
-                {
-                    bool open = ImGui.CollapsingHeader(category, ImGuiTreeNodeFlags.DefaultOpen);
-                    categories.Add(category, open);
-                }
-            }
-
-            ImGui.BeginColumns("##Properties2", 2);
             for (int i = 0; i < properties.Length; i++)
             {
                 var categoryAttribute = properties[i].GetCustomAttribute<CategoryAttribute>();
@@ -65,8 +54,18 @@ namespace UIFramework
                 if (categoryAttribute != null)
                     category = categoryAttribute.Category;
 
-                //Check for category expansion on collapsed header
-                if (!categories[category])
+                //Draw category dropdown
+                if (activeDropdown != category)
+                {
+                    ImGui.Columns(1);
+
+                    activeDropdown = category;
+                    showDropdown = ImGui.CollapsingHeader(activeDropdown, ImGuiTreeNodeFlags.DefaultOpen);
+
+                    ImGui.Columns(2);
+                }
+
+                if (!showDropdown)
                     continue;
 
                 ImGui.Text(label);
@@ -94,7 +93,7 @@ namespace UIFramework
             style.FramePadding = frameSize;
             style.ItemSpacing = itemSpacing;
 
-            ImGui.EndColumns();
+            ImGui.Columns(1);
         }
 
         static bool SetPropertyUI(System.Reflection.PropertyInfo property,
